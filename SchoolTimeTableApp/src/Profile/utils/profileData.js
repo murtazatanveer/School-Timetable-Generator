@@ -52,7 +52,7 @@ export const menuSections = [
         icon: "list-outline",
         title: "View All Timetables",
         description: "View all created timetables",
-        screen: "ViewTimetables",
+        screen: "Timetables",
         destructive: false,
       },
     ],
@@ -66,7 +66,7 @@ export const menuSections = [
         icon: "person-add-outline",
         title: "Add New User",
         description: "Add a new teacher or admin to the system",
-        screen: "AddUser",
+        screen: null, // Handled by custom press
         destructive: false,
       },
       {
@@ -74,7 +74,7 @@ export const menuSections = [
         icon: "people-outline",
         title: "View All Users",
         description: "View all registered users",
-        screen: "ViewUsers",
+        screen: "Users",
         destructive: false,
       },
     ],

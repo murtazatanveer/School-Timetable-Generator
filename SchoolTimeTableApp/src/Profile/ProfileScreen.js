@@ -6,20 +6,23 @@ import {
   StatusBar,
   ScrollView,
   Animated,
+  Alert,
 } from "react-native";
 import { COLORS, SPACING } from "../Theme/colors";
 import { useProfileScroll } from "./Hooks/useProfileScroll";
 import { menuSections } from "./utils/profileData";
 import ProfileHeader from "./components/ProfileHeader";
 import MenuSection from "./components/MenuSection";
-import LogoutButton from "./components/LogoutButton";
 import ThemePopup from "./components/ThemePopup";
 import BottomNavigation from "../Navigation/BottomNavigation";
+import AppButton from "../AppButton/AppButton";
+import UserPopup from "../UsersScreen/components/UserPopup";
 
 const ProfileScreen = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
   const { handleScroll } = useProfileScroll(translateY);
   const [showThemePopup, setShowThemePopup] = useState(false);
+  const [showAddUserPopup, setShowAddUserPopup] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("light");
 
   const handleThemePress = () => {
@@ -33,6 +36,23 @@ const ProfileScreen = ({ navigation }) => {
 
   const closeThemePopup = () => {
     setShowThemePopup(false);
+  };
+
+  const handleAddUserPress = () => {
+    setShowAddUserPopup(true);
+  };
+
+  const closeAddUserPopup = () => {
+    setShowAddUserPopup(false);
+  };
+
+  const handleAddUser = (userData) => {
+    // Mock add user functionality
+    Alert.alert(
+      "Success",
+      `User "${userData.userName}" has been added successfully as ${userData.role}!`,
+      [{ text: "OK", onPress: closeAddUserPopup }],
+    );
   };
 
   return (
@@ -55,11 +75,23 @@ const ProfileScreen = ({ navigation }) => {
                 section={section}
                 navigation={navigation}
                 onThemePress={handleThemePress}
+                onAddUserPress={handleAddUserPress}
               />
             ))}
           </View>
 
-          <LogoutButton />
+          <AppButton
+            title="Logout"
+            icon="log-out-outline"
+            onPress={() => {
+              Alert.alert("Logout", "Are you sure you want to logout?", [
+                { text: "Cancel", style: "cancel" },
+                { text: "Logout", style: "destructive" },
+              ]);
+            }}
+            variant="destructive"
+            style={{ marginHorizontal: SPACING.lg, marginTop: SPACING.md }}
+          />
 
           <View style={styles.bottomSpacing} />
         </ScrollView>
@@ -71,6 +103,17 @@ const ProfileScreen = ({ navigation }) => {
         selectedTheme={selectedTheme}
         onSelect={handleThemeSelect}
         onClose={closeThemePopup}
+      />
+
+      {/* Add User Popup - Using Unified Component */}
+      <UserPopup
+        visible={showAddUserPopup}
+        onClose={closeAddUserPopup}
+        onSave={handleAddUser}
+        title="Add New User"
+        icon="person-add-outline"
+        buttonText="Add User"
+        editingUser={null}
       />
 
       <BottomNavigation

@@ -10,11 +10,13 @@ import TeachersScreen from "./src/Teachers/TeachersScreen";
 import TeacherTimetableScreen from "./src/TeacherTimetable/TeacherTimetableScreen";
 import TimetableSetupScreen from "./src/TimeTableSetup/TimeTableSetup";
 import TimetableScreen from "./src/ViewTimetable/TimetableScreen";
+import TimetablesScreen from "./src/TimetablesScreen/TimetablesScreen";
+import UsersScreen from "./src/UsersScreen/UsersScreen";
 
 export default function App() {
   return (
     <>
-      <TimetableSetupScreen />
+      <TimetableScreen />
     </>
   );
 }

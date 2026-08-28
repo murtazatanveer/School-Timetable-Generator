@@ -44,7 +44,11 @@ const ClassCard = ({ classData, isExpanded, onToggle }) => {
       {isExpanded && (
         <View style={styles.classContent}>
           {classData.sections.map((section) => (
-            <SectionCard key={section.id} section={section} />
+            <SectionCard
+              key={section.id}
+              section={section}
+              classTeacher={section.classTeacher || null}
+            />
           ))}
         </View>
       )}

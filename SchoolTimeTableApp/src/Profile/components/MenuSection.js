@@ -9,7 +9,17 @@ import {
 } from "../../Theme/colors";
 import MenuItem from "./MenuItem";
 
-const MenuSection = ({ section, navigation, onThemePress }) => {
+const MenuSection = ({ section, navigation, onThemePress, onAddUserPress }) => {
+  const handleItemPress = (item) => {
+    if (item.id === "theme" && onThemePress) {
+      onThemePress();
+    } else if (item.id === "add-user" && onAddUserPress) {
+      onAddUserPress();
+    } else {
+      // Handle other items
+    }
+  };
+
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
@@ -25,7 +35,7 @@ const MenuSection = ({ section, navigation, onThemePress }) => {
             key={item.id}
             item={item}
             navigation={navigation}
-            onThemePress={onThemePress}
+            onPress={() => handleItemPress(item)}
           />
         ))}
       </View>

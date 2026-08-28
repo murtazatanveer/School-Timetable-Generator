@@ -9,7 +9,7 @@ import {
 } from "../../Theme/colors";
 import SubjectCard from "./SubjectCard";
 
-const SectionCard = ({ section }) => {
+const SectionCard = ({ section, classTeacher }) => {
   return (
     <View style={styles.sectionCard}>
       <View style={styles.sectionHeader}>
@@ -28,7 +28,20 @@ const SectionCard = ({ section }) => {
           </Text>
         </View>
       </View>
+
+      {/* Class Teacher Info */}
+      {classTeacher && (
+        <View style={styles.classTeacherContainer}>
+          <View style={styles.classTeacherBadge}>
+            <Ionicons name="ribbon-outline" size={14} color={COLORS.primary} />
+            <Text style={styles.classTeacherLabel}>Class Teacher</Text>
+          </View>
+          <Text style={styles.classTeacherName}>{classTeacher}</Text>
+        </View>
+      )}
+
       <View style={styles.sectionDivider} />
+
       <View style={styles.subjectsList}>
         {section.subjects.map((subject, index) => (
           <SubjectCard key={index} subject={subject} />
@@ -76,6 +89,34 @@ const styles = StyleSheet.create({
   subjectCountText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: COLORS.textSecondary,
+  },
+  classTeacherContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 6,
+    marginBottom: 4,
+    paddingHorizontal: 2,
+    backgroundColor: COLORS.primaryFade,
+    paddingVertical: 4,
+    borderRadius: BORDER_RADIUS.md,
+    paddingHorizontal: SPACING.sm,
+  },
+  classTeacherBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+  },
+  classTeacherLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    color: COLORS.primary,
+  },
+  classTeacherName: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: COLORS.textPrimary,
+    marginLeft: SPACING.xs,
   },
   sectionDivider: {
     height: 1,

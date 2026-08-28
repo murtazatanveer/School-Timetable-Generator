@@ -1,6 +1,24 @@
 export const teacherData = {
+  id: "teacher-1",
   name: "Ahmed Khan",
-  subjects: ["Mathematics", "Physics", "English", "Computer Science"],
+  // Convert subjects to the format expected by TeacherCard
+  subjects: [
+    { name: "Mathematics", className: "Class 6", section: "A" },
+    { name: "Physics", className: "Class 9", section: "B" },
+    { name: "Mathematics", className: "Class 10", section: "A" },
+    { name: "English", className: "Class 8", section: "B" },
+    { name: "Computer Science", className: "Class 9", section: "A" },
+    { name: "Physics", className: "Class 11", section: "A" },
+    { name: "English", className: "Class 7", section: "A" },
+    { name: "Computer Science", className: "Class 10", section: "A" },
+  ],
+  // Add class teacher information if applicable
+  classTeacher: {
+    className: "Class 6",
+    section: "A",
+    subject: "Mathematics",
+  },
+  // Keep the timetable data for the grid
   timetable: {
     Monday: [
       {

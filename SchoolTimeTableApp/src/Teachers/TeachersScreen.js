@@ -15,9 +15,11 @@ import TeacherSearch from "./components/TeacherSearch";
 import TeacherCard from "./components/TeacherCard";
 import EmptyState from "./components/EmptyState";
 import BottomNavigation from "../Navigation/BottomNavigation";
+import TeacherSearchPopup from "../TeacherSearchPopup/TeacherSearchPopup";
 
 const TeachersScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSearchPopup, setShowSearchPopup] = useState(false);
   const filteredTeachers = useTeacherSearch(teachersData, searchQuery);
 
   // Animation for bottom navigation
@@ -55,11 +57,11 @@ const TeachersScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
-
       <View style={styles.container}>
         <TeacherHeader
           teacherCount={teachersData.length}
           classTeacherCount={classTeacherCount}
+          onSearchPress={() => setShowSearchPopup(true)}
         />
 
         <TeacherSearch
@@ -78,6 +80,12 @@ const TeachersScreen = ({ navigation }) => {
           ListEmptyComponent={<EmptyState searchQuery={searchQuery} />}
         />
       </View>
+
+      {/* Search Popup */}
+      <TeacherSearchPopup
+        visible={showSearchPopup}
+        onClose={() => setShowSearchPopup(false)}
+      />
 
       <BottomNavigation
         navigation={navigation}

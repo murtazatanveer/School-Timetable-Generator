@@ -8,7 +8,7 @@ import {
   TYPOGRAPHY,
 } from "../../Theme/colors";
 
-const TeacherHeader = ({ teacherCount, classTeacherCount }) => {
+const TeacherHeader = ({ teacherCount, classTeacherCount, onSearchPress }) => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerContent}>
@@ -21,16 +21,21 @@ const TeacherHeader = ({ teacherCount, classTeacherCount }) => {
               <Text style={styles.headerTitle}>Teachers</Text>
               <View style={styles.headerStats}>
                 <Text style={styles.headerStatsText}>
-                  {teacherCount} Teachers
-                </Text>
-                <View style={styles.statsDot} />
-                <Text style={styles.headerStatsText}>
-                  {classTeacherCount || 0} Class Teachers
+                  {classTeacherCount} Class Teachers
                 </Text>
               </View>
             </View>
           </View>
           <View style={styles.headerRight}>
+            {/* Search Button */}
+            <TouchableOpacity
+              style={styles.searchButton}
+              onPress={onSearchPress}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="search-outline" size={22} color={COLORS.white} />
+            </TouchableOpacity>
+
             <View style={styles.headerBadge}>
               <Text style={styles.headerBadgeText}>{teacherCount}</Text>
             </View>
@@ -108,6 +113,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: SPACING.sm,
+  },
+  searchButton: {
+    width: 40,
+    height: 40,
+    borderRadius: BORDER_RADIUS.md,
+    backgroundColor: COLORS.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    ...SHADOWS.small,
   },
   headerBadge: {
     backgroundColor: COLORS.primaryFade,

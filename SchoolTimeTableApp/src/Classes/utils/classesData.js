@@ -6,6 +6,7 @@ export const classesData = [
       {
         id: "6A",
         name: "A",
+        classTeacher: "Mr. Ahmed",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Ahmed" },
           { name: "English", teacher: "Ms. Sara" },
@@ -17,6 +18,7 @@ export const classesData = [
       {
         id: "6B",
         name: "B",
+        classTeacher: "Mr. Ali",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Ali" },
           { name: "English", teacher: "Ms. Sara" },
@@ -28,6 +30,7 @@ export const classesData = [
       {
         id: "6C",
         name: "C",
+        classTeacher: "Ms. Kiran",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Ahmed" },
           { name: "English", teacher: "Mr. Hassan" },
@@ -44,6 +47,7 @@ export const classesData = [
       {
         id: "7A",
         name: "A",
+        classTeacher: "Mr. Khalid",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Khalid" },
           { name: "English", teacher: "Ms. Ayesha" },
@@ -55,6 +59,7 @@ export const classesData = [
       {
         id: "7B",
         name: "B",
+        classTeacher: "Ms. Sara",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Ahmed" },
           { name: "English", teacher: "Ms. Sara" },
@@ -72,6 +77,7 @@ export const classesData = [
       {
         id: "8A",
         name: "A",
+        classTeacher: "Mr. Usman",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Usman" },
           { name: "English", teacher: "Ms. Sara" },
@@ -84,6 +90,7 @@ export const classesData = [
       {
         id: "8B",
         name: "B",
+        classTeacher: "Mr. Hassan",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Ahmed" },
           { name: "English", teacher: "Mr. Hassan" },
@@ -101,6 +108,7 @@ export const classesData = [
       {
         id: "9A",
         name: "A",
+        classTeacher: "Mr. Khalid",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Khalid" },
           { name: "English", teacher: "Ms. Ayesha" },
@@ -113,6 +121,7 @@ export const classesData = [
       {
         id: "9B",
         name: "B",
+        classTeacher: "Mr. Usman",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Usman" },
           { name: "English", teacher: "Ms. Sara" },
@@ -124,6 +133,7 @@ export const classesData = [
       {
         id: "9C",
         name: "C",
+        classTeacher: "Dr. Usman",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Ahmed" },
           { name: "English", teacher: "Mr. Hassan" },
@@ -140,6 +150,7 @@ export const classesData = [
       {
         id: "10A",
         name: "A",
+        classTeacher: "Mr. Ahmed",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Ahmed" },
           { name: "English", teacher: "Ms. Sara" },
@@ -152,6 +163,7 @@ export const classesData = [
       {
         id: "10B",
         name: "B",
+        classTeacher: "Ms. Ayesha",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Usman" },
           { name: "English", teacher: "Ms. Ayesha" },
@@ -169,6 +181,7 @@ export const classesData = [
       {
         id: "11A",
         name: "A",
+        classTeacher: "Mr. Khalid",
         subjects: [
           { name: "Mathematics", teacher: "Mr. Khalid" },
           { name: "English", teacher: "Ms. Sara" },

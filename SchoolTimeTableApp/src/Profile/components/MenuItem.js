@@ -3,12 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SPACING, BORDER_RADIUS, TYPOGRAPHY } from "../../Theme/colors";
 
-const MenuItem = ({ item, navigation, onThemePress }) => {
+const MenuItem = ({ item, navigation, onPress }) => {
   const isDestructive = item.destructive;
 
   const handlePress = () => {
-    if (item.id === "theme" && onThemePress) {
-      onThemePress();
+    if (onPress) {
+      onPress();
     } else if (isDestructive) {
       Alert.alert(item.alertTitle, item.alertMessage, [
         { text: "Cancel", style: "cancel" },

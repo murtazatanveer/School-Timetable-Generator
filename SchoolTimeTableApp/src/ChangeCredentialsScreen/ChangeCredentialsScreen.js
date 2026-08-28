@@ -9,7 +9,7 @@ import { COLORS, SPACING } from "../Theme/colors";
 import { useCredentialsForm } from "./Hooks/useCredentialsForm";
 import CredentialsHeader from "./components/CredentialsHeader";
 import CredentialsSection from "./components/CredentialsSection";
-import SubmitButton from "./components/SubmitButton";
+import AppButton from "../AppButton/AppButton";
 
 const ChangeCredentialsScreen = ({ navigation }) => {
   const {
@@ -105,7 +105,7 @@ const ChangeCredentialsScreen = ({ navigation }) => {
                 id: "newPassword",
                 label: "New Password",
                 icon: "shield-checkmark-outline",
-                placeholder: "Enter your new password (min 6 chars)",
+                placeholder: "Enter your new password (min 8 chars)",
                 value: formData.newPassword,
                 error: errors.newPassword,
                 isFocused: focusedField === "newPassword",
@@ -123,7 +123,14 @@ const ChangeCredentialsScreen = ({ navigation }) => {
             getIconColor={getIconColor}
           />
 
-          <SubmitButton isLoading={isLoading} onPress={handleSubmit} />
+          <AppButton
+            title="Change Credentials"
+            icon="save-outline"
+            onPress={handleSubmit}
+            loading={isLoading}
+            disabled={isLoading}
+            style={{ marginTop: SPACING.xl }}
+          />
 
           <View style={styles.bottomSpacing} />
         </ScrollView>

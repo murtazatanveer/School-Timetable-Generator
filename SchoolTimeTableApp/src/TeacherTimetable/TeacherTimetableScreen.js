@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -12,22 +13,20 @@ import { teacherData } from "./utils/teacherTimetableData";
 import TimetableHeader from "./components/TimetableHeader";
 import TimetableGrid from "./components/TimetableGrid";
 import TeacherCard from "../Teachers/components/TeacherCard";
-import BottomNavigation from "../Navigation/BottomNavigation";
 
 const TeacherTimetableScreen = ({ navigation, route }) => {
   const { days, slots, teacher } = useTeacherTimetable(teacherData);
 
   // Animation for bottom navigation
   const translateY = new Animated.Value(0);
-  const lastOffsetY = { current: 0 };
-  const isAnimating = { current: false };
+  const lastOffsetY = useRef(0);
+  const isAnimating = useRef(false);
 
   // Handle scroll to hide/show bottom nav
   const handleScroll = (event) => {
     const currentOffset = event.nativeEvent.contentOffset.y;
     const direction = currentOffset > lastOffsetY.current ? "down" : "up";
 
-    // Only animate if not already animating
     if (!isAnimating.current) {
       isAnimating.current = true;
 
@@ -57,7 +56,10 @@ const TeacherTimetableScreen = ({ navigation, route }) => {
           scrollEventThrottle={16}
           contentContainerStyle={styles.scrollContent}
         >
+          {/* Teacher Card */}
           <TeacherCard teacher={teacherData} />
+
+          {/* Timetable Grid */}
           <TimetableGrid
             days={days}
             slots={slots}
@@ -67,12 +69,6 @@ const TeacherTimetableScreen = ({ navigation, route }) => {
           <View style={styles.bottomSpacing} />
         </ScrollView>
       </View>
-
-      <BottomNavigation
-        navigation={navigation}
-        activeScreen="Timetable"
-        translateY={translateY}
-      />
     </SafeAreaView>
   );
 };
@@ -90,7 +86,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 120, // Increased to accommodate bottom nav
+    paddingBottom: 120,
   },
   bottomSpacing: {
     height: SPACING.xxl,
