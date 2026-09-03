@@ -18,7 +18,7 @@ import SchoolStatistics from "./components/SchoolStatistics";
 import ClassOverview from "./components/ClassOverview";
 import TeacherOverview from "./components/TeacherOverview";
 import QuickActions from "./components/QuickActions";
-import BottomNavigation from "../Navigation/BottomNavigation";
+import BottomNavigation from "../common/Navigation/BottomNavigation";
 import CurrentPeriodPopup from "./components/CurrentPeriodPopup";
 
 // Hooks

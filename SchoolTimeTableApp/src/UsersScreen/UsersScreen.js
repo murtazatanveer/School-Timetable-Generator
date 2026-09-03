@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -11,12 +11,11 @@ import { COLORS, SPACING } from "../Theme/colors";
 import { useUserScroll } from "./hooks/useUserScroll";
 import { usePasswordVisibility } from "./hooks/usePasswordVisibility";
 import { users as initialUsers } from "./data/usersData";
-import CredentialsHeader from "../ChangeCredentialsScreen/components/CredentialsHeader";
 import UserStats from "./components/UserStats";
 import UserCard from "./components/UserCard";
 import AddUserButton from "./components/AddUserButton";
-import BottomNavigation from "../Navigation/BottomNavigation";
 import UserPopup from "./components/UserPopup";
+import Header from "../common/AppHeader/Header";
 
 const UsersScreen = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
@@ -111,7 +110,7 @@ const UsersScreen = ({ navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
 
       <View style={styles.container}>
-        <CredentialsHeader
+        <Header
           navigation={navigation}
           title="Users"
           icon="people-outline"
@@ -157,12 +156,6 @@ const UsersScreen = ({ navigation }) => {
         title="Add New User"
         icon="person-add-outline"
         buttonText="Add User"
-      />
-
-      <BottomNavigation
-        navigation={navigation}
-        activeScreen="Profile"
-        translateY={translateY}
       />
     </SafeAreaView>
   );

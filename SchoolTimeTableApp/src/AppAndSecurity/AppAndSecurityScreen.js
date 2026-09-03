@@ -10,9 +10,9 @@ import {
 import { COLORS, SPACING } from "../Theme/colors";
 import { useAppSecurityScroll } from "./Hooks/useAppSecurityScroll";
 import { appInfo, securityInfo } from "./utils/appSecurityData";
-import CredentialsHeader from "../ChangeCredentialsScreen/components/CredentialsHeader";
 import InfoCard from "./components/InfoCard";
 import ChangeCredentialsButton from "./components/ChangeCredentialsButton";
+import Header from "../common/AppHeader/Header";
 
 const AppAndSecurityScreen = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
@@ -23,7 +23,7 @@ const AppAndSecurityScreen = ({ navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
 
       <View style={styles.container}>
-        <CredentialsHeader
+        <Header
           navigation={navigation}
           title="App & Security"
           icon="shield-checkmark-outline"

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -14,7 +14,7 @@ import HeaderCard from "./components/HeaderCard";
 import DaySelector from "./components/DaySelector";
 import SlotCard from "./components/SlotCard";
 import BottomSheet from "./components/BottomSheet";
-import BottomNavigation from "../Navigation/BottomNavigation";
+import BottomNavigation from "../common/Navigation/BottomNavigation";
 
 const TimetableScreen = ({ navigation }) => {
   const [selectedDay, setSelectedDay] = useState("Monday");

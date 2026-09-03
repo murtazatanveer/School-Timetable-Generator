@@ -7,7 +7,7 @@ import {
   Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS, SHADOWS, TYPOGRAPHY } from "../Theme/colors";
+import { COLORS, SHADOWS, TYPOGRAPHY } from "../../Theme/colors";
 
 const BottomNavigation = ({
   navigation,

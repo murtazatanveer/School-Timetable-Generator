@@ -12,7 +12,7 @@ import { useClassData } from "./Hooks/useClassData";
 import { classesData } from "./utils/classesData";
 import ClassesHeader from "./components/ClassesHeader";
 import ClassCard from "./components/ClassCard";
-import BottomNavigation from "../Navigation/BottomNavigation";
+import BottomNavigation from "../common/Navigation/BottomNavigation";
 
 const ClassesScreen = ({ navigation }) => {
   const [expandedClass, setExpandedClass] = useState(null);

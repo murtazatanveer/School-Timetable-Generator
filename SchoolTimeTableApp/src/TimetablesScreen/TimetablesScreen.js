@@ -10,10 +10,10 @@ import {
 import { COLORS, SPACING } from "../Theme/colors";
 import { useTimetableScroll } from "./hooks/useTimetableScroll";
 import { timetables } from "./data/timetablesData";
-import CredentialsHeader from "../ChangeCredentialsScreen/components/CredentialsHeader";
 import TimetableStats from "./components/TimetableStats";
 import TimetableCard from "./components/TimetableCard";
-import AppButton from "../AppButton/AppButton";
+import AppButton from "../common/AppButton/AppButton";
+import Header from "../common/AppHeader/Header";
 
 const TimetablesScreen = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
@@ -27,7 +27,7 @@ const TimetablesScreen = ({ navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
 
       <View style={styles.container}>
-        <CredentialsHeader
+        <Header
           navigation={navigation}
           title="Timetables"
           icon="calendar-outline"

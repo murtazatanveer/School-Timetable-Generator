@@ -12,7 +12,7 @@ import {
   BORDER_RADIUS,
   SHADOWS,
   TYPOGRAPHY,
-} from "../Theme/colors";
+} from "../../Theme/colors";
 
 const AppButton = ({
   title,

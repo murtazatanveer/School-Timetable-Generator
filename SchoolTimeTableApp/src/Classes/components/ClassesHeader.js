@@ -8,7 +8,7 @@ import {
   TYPOGRAPHY,
 } from "../../Theme/colors";
 
-const ClassesHeader = ({ totalClasses, totalSections, totalSubjects }) => {
+const ClassesHeader = ({ totalClasses }) => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerContent}>

@@ -20,7 +20,7 @@ import {
   SHADOWS,
   TYPOGRAPHY,
 } from "../../Theme/colors";
-import AppButton from "../../AppButton/AppButton";
+import AppButton from "../../common/AppButton/AppButton";
 
 const { width, height } = Dimensions.get("window");
 

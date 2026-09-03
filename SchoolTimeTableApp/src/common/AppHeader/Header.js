@@ -8,7 +8,7 @@ import {
   TYPOGRAPHY,
 } from "../../Theme/colors";
 
-const CredentialsHeader = ({
+const Header = ({
   navigation,
   title = "Change Credentials",
   icon = "shield-checkmark-outline",
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CredentialsHeader;
+export default Header;

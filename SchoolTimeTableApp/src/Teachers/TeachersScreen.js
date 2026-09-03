@@ -14,7 +14,7 @@ import TeacherHeader from "./components/TeacherHeader";
 import TeacherSearch from "./components/TeacherSearch";
 import TeacherCard from "./components/TeacherCard";
 import EmptyState from "./components/EmptyState";
-import BottomNavigation from "../Navigation/BottomNavigation";
+import BottomNavigation from "../common/Navigation/BottomNavigation";
 import TeacherSearchPopup from "../TeacherSearchPopup/TeacherSearchPopup";
 
 const TeachersScreen = ({ navigation }) => {

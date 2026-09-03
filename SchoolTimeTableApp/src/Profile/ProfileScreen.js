@@ -14,8 +14,8 @@ import { menuSections } from "./utils/profileData";
 import ProfileHeader from "./components/ProfileHeader";
 import MenuSection from "./components/MenuSection";
 import ThemePopup from "./components/ThemePopup";
-import BottomNavigation from "../Navigation/BottomNavigation";
-import AppButton from "../AppButton/AppButton";
+import BottomNavigation from "../common/Navigation/BottomNavigation";
+import AppButton from "../common/AppButton/AppButton";
 import UserPopup from "../UsersScreen/components/UserPopup";
 
 const ProfileScreen = ({ navigation }) => {

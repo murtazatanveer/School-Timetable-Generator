@@ -1,850 +1,187 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
-  TextInput,
   SafeAreaView,
   StatusBar,
-  KeyboardAvoidingView,
-  Platform,
   Alert,
+  Text,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  COLORS,
-  SPACING,
-  BORDER_RADIUS,
-  SHADOWS,
-  TYPOGRAPHY,
-} from "../Theme/colors";
+import { COLORS, SPACING, TYPOGRAPHY, SHADOWS } from "../Theme/colors";
+import Header from "../common/AppHeader/Header";
+import Interface1 from "./Interface1/Interface1";
+import Interface2 from "./Interface2/Interface2";
+import Interface3 from "./Interface3/Interface3";
 
-const CreateTimetableScreen = ({ navigation }) => {
-  // State for Schedule
-  const [schedule, setSchedule] = useState({
+const CreateTimetable = ({ navigation }) => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [timetableData, setTimetableData] = useState({
+    timetableName: "",
     workingDays: "",
     slotsPerDay: "",
     breakAfterSlot: "",
-    slotDuration: "45",
+    breakDuration: "",
     firstSlotTime: "08:00 AM",
+    slotDuration: "",
+    classes: [],
+    teachers: [],
   });
 
-  // State for Classes
-  const [classes, setClasses] = useState([{ id: 1, name: "", subjects: [] }]);
-  const [newSubject, setNewSubject] = useState("");
-
-  // State for Teachers
-  const [teachers, setTeachers] = useState([
-    {
-      id: 1,
-      name: "",
-      subjects: [{ id: 1, name: "", section: "" }],
-    },
-  ]);
-  const [teacherSubjectName, setTeacherSubjectName] = useState("");
-  const [teacherSubjectSection, setTeacherSubjectSection] = useState("");
-
-  // State for Subject Assignments (Class-wise)
-  const [classSubjects, setClassSubjects] = useState([
-    { id: 1, className: "", subjects: [] },
-  ]);
-  const [classSubjectName, setClassSubjectName] = useState("");
-
-  // Validation states
-  const [errors, setErrors] = useState({});
-  const [completedSections, setCompletedSections] = useState({
-    schedule: false,
-    classes: false,
-    teachers: false,
-    subjects: false,
-  });
-
-  // Schedule Handlers
-  const handleScheduleChange = (field, value) => {
-    setSchedule({ ...schedule, [field]: value });
-    if (errors[field]) {
-      setErrors({ ...errors, [field]: "" });
-    }
-    const {
-      workingDays,
-      slotsPerDay,
-      breakAfterSlot,
-      slotDuration,
-      firstSlotTime,
-    } = {
-      ...schedule,
-      [field]: value,
-    };
-    if (
-      workingDays &&
-      slotsPerDay &&
-      breakAfterSlot &&
-      slotDuration &&
-      firstSlotTime
-    ) {
-      setCompletedSections({ ...completedSections, schedule: true });
-    } else {
-      setCompletedSections({ ...completedSections, schedule: false });
-    }
+  const handleNext = (data) => {
+    setTimetableData({ ...timetableData, ...data });
+    setCurrentStep(currentStep + 1);
   };
 
-  // Class Handlers (for Class & Section Overview)
-  const addClass = () => {
-    const newId =
-      classes.length > 0 ? Math.max(...classes.map((c) => c.id)) + 1 : 1;
-    setClasses([...classes, { id: newId, name: "", subjects: [] }]);
-    setCompletedSections({ ...completedSections, classes: false });
+  const handleBack = () => {
+    setCurrentStep(currentStep - 1);
   };
 
-  const removeClass = (id) => {
-    if (classes.length > 1) {
-      setClasses(classes.filter((c) => c.id !== id));
-    }
-  };
-
-  const updateClass = (id, name) => {
-    setClasses(classes.map((c) => (c.id === id ? { ...c, name } : c)));
-    const allHaveNames = classes.every((c) => c.name.trim() !== "");
-    if (classes.length > 0 && allHaveNames) {
-      setCompletedSections({ ...completedSections, classes: true });
-    } else {
-      setCompletedSections({ ...completedSections, classes: false });
-    }
-  };
-
-  const addClassSubject = (id) => {
-    if (newSubject.trim()) {
-      setClasses(
-        classes.map((c) =>
-          c.id === id
-            ? { ...c, subjects: [...c.subjects, newSubject.trim()] }
-            : c,
-        ),
-      );
-      setNewSubject("");
-    }
-  };
-
-  const removeClassSubject = (classId, subjectIndex) => {
-    setClasses(
-      classes.map((c) =>
-        c.id === classId
-          ? {
-              ...c,
-              subjects: c.subjects.filter((_, i) => i !== subjectIndex),
-            }
-          : c,
-      ),
-    );
-  };
-
-  // Teacher Handlers
-  const addTeacher = () => {
-    const newId =
-      teachers.length > 0 ? Math.max(...teachers.map((t) => t.id)) + 1 : 1;
-    setTeachers([
-      ...teachers,
+  const handleGenerate = (data) => {
+    setTimetableData({ ...timetableData, ...data });
+    Alert.alert("Success!", "Timetable generated successfully!", [
       {
-        id: newId,
-        name: "",
-        subjects: [{ id: 1, name: "", section: "" }],
+        text: "View Timetable",
+        onPress: () => navigation?.navigate("Timetable"),
       },
+      { text: "OK", style: "cancel" },
     ]);
-    setCompletedSections({ ...completedSections, teachers: false });
   };
 
-  const removeTeacher = (id) => {
-    if (teachers.length > 1) {
-      setTeachers(teachers.filter((t) => t.id !== id));
-    }
-  };
-
-  const updateTeacher = (id, name) => {
-    setTeachers(teachers.map((t) => (t.id === id ? { ...t, name } : t)));
-    const allHaveNames = teachers.every((t) => t.name.trim() !== "");
-    if (teachers.length > 0 && allHaveNames) {
-      setCompletedSections({ ...completedSections, teachers: true });
-    } else {
-      setCompletedSections({ ...completedSections, teachers: false });
-    }
-  };
-
-  const addTeacherSubject = (teacherId) => {
-    const newId =
-      teachers
-        .find((t) => t.id === teacherId)
-        ?.subjects.reduce((max, s) => Math.max(max, s.id), 0) + 1 || 1;
-    setTeachers(
-      teachers.map((t) =>
-        t.id === teacherId
-          ? {
-              ...t,
-              subjects: [...t.subjects, { id: newId, name: "", section: "" }],
-            }
-          : t,
-      ),
-    );
-  };
-
-  const removeTeacherSubject = (teacherId, subjectId) => {
-    setTeachers(
-      teachers.map((t) =>
-        t.id === teacherId
-          ? {
-              ...t,
-              subjects: t.subjects.filter((s) => s.id !== subjectId),
-            }
-          : t,
-      ),
-    );
-  };
-
-  const updateTeacherSubject = (teacherId, subjectId, field, value) => {
-    setTeachers(
-      teachers.map((t) =>
-        t.id === teacherId
-          ? {
-              ...t,
-              subjects: t.subjects.map((s) =>
-                s.id === subjectId ? { ...s, [field]: value } : s,
-              ),
-            }
-          : t,
-      ),
-    );
-  };
-
-  // Class Subjects Handlers (Subject-wise)
-  const addClassSubjectEntry = () => {
-    const newId =
-      classSubjects.length > 0
-        ? Math.max(...classSubjects.map((c) => c.id)) + 1
-        : 1;
-    setClassSubjects([
-      ...classSubjects,
-      { id: newId, className: "", subjects: [] },
-    ]);
-    setCompletedSections({ ...completedSections, subjects: false });
-  };
-
-  const removeClassSubjectEntry = (id) => {
-    if (classSubjects.length > 1) {
-      setClassSubjects(classSubjects.filter((c) => c.id !== id));
-    }
-  };
-
-  const updateClassSubjectEntry = (id, className) => {
-    setClassSubjects(
-      classSubjects.map((c) => (c.id === id ? { ...c, className } : c)),
-    );
-    const allHaveNames = classSubjects.every((c) => c.className.trim() !== "");
-    if (classSubjects.length > 0 && allHaveNames) {
-      setCompletedSections({ ...completedSections, subjects: true });
-    } else {
-      setCompletedSections({ ...completedSections, subjects: false });
-    }
-  };
-
-  const addSubjectToClass = (id) => {
-    if (classSubjectName.trim()) {
-      setClassSubjects(
-        classSubjects.map((c) =>
-          c.id === id
-            ? { ...c, subjects: [...c.subjects, classSubjectName.trim()] }
-            : c,
-        ),
-      );
-      setClassSubjectName("");
-    }
-  };
-
-  const removeSubjectFromClass = (classId, subjectIndex) => {
-    setClassSubjects(
-      classSubjects.map((c) =>
-        c.id === classId
-          ? {
-              ...c,
-              subjects: c.subjects.filter((_, i) => i !== subjectIndex),
-            }
-          : c,
-      ),
-    );
-  };
-
-  // Validate and Generate
-  const validateAndGenerate = () => {
-    const newErrors = {};
-    let isValid = true;
-
-    if (!schedule.workingDays) {
-      newErrors.workingDays = "Please enter the number of working days.";
-      isValid = false;
-    }
-    if (!schedule.slotsPerDay) {
-      newErrors.slotsPerDay = "Please enter the number of slots.";
-      isValid = false;
-    }
-    if (!schedule.breakAfterSlot) {
-      newErrors.breakAfterSlot = "Please specify the break slot.";
-      isValid = false;
-    }
-    if (!schedule.slotDuration) {
-      newErrors.slotDuration = "Please enter slot duration.";
-      isValid = false;
-    }
-    if (!schedule.firstSlotTime) {
-      newErrors.firstSlotTime = "Please enter a starting time.";
-      isValid = false;
-    }
-
-    const emptyClasses = classes.filter((c) => c.name.trim() === "");
-    if (emptyClasses.length > 0) {
-      newErrors.classes = "Please enter all class names.";
-      isValid = false;
-    }
-
-    const emptyTeachers = teachers.filter((t) => t.name.trim() === "");
-    if (emptyTeachers.length > 0) {
-      newErrors.teachers = "Please enter all teacher names.";
-      isValid = false;
-    }
-
-    const emptyClassSubjects = classSubjects.filter(
-      (c) => c.className.trim() === "",
-    );
-    if (emptyClassSubjects.length > 0) {
-      newErrors.classSubjects = "Please enter all class names for subjects.";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-
-    if (isValid) {
-      Alert.alert(
-        "Success!",
-        "All data entered successfully. Generating timetable...",
-        [
-          {
-            text: "View Timetable",
-            onPress: () => navigation?.navigate("Timetable"),
-          },
-          { text: "OK", style: "cancel" },
-        ],
-      );
-    }
-  };
-
-  // Render Time Slots Preview
-  const renderTimeSlotsPreview = () => {
-    const { firstSlotTime, slotDuration, slotsPerDay } = schedule;
-    if (!firstSlotTime || !slotDuration || !slotsPerDay) return null;
-
-    const slots = [];
-    const [hours, minutes] = firstSlotTime.split(":");
-    let currentHour = parseInt(hours);
-    let currentMinute = parseInt(minutes.replace(" AM", "").replace(" PM", ""));
-    const isPM = firstSlotTime.includes("PM");
-
-    for (let i = 0; i < parseInt(slotsPerDay); i++) {
-      const displayHour = currentHour > 12 ? currentHour - 12 : currentHour;
-      const displayMinute = currentMinute.toString().padStart(2, "0");
-      const ampm = currentHour >= 12 ? "PM" : "AM";
-      slots.push(`${displayHour}:${displayMinute} ${ampm}`);
-
-      currentMinute += parseInt(slotDuration);
-      if (currentMinute >= 60) {
-        currentHour += Math.floor(currentMinute / 60);
-        currentMinute = currentMinute % 60;
-      }
-    }
+  // COMPACT STEP INDICATOR
+  const renderStepIndicator = () => {
+    const steps = [
+      { label: "Schedule", icon: "calendar-outline" },
+      { label: "Classes", icon: "school-outline" },
+      { label: "Teachers", icon: "people-outline" },
+    ];
 
     return (
-      <View style={styles.timePreviewContainer}>
-        <Text style={styles.timePreviewTitle}>Time Slots Preview</Text>
-        <View style={styles.timePreviewGrid}>
-          {slots.map((time, index) => (
-            <View key={index} style={styles.timeSlotItem}>
-              <View style={styles.timeSlotNumber}>
-                <Text style={styles.timeSlotNumberText}>{index + 1}</Text>
+      <View style={styles.stepsRow}>
+        {steps.map((step, index) => {
+          const stepNumber = index + 1;
+          const isActive = stepNumber === currentStep;
+          const isCompleted = stepNumber < currentStep;
+          const isInactive = stepNumber > currentStep;
+
+          return (
+            <View key={index} style={styles.stepColumn}>
+              <View style={styles.circleContainer}>
+                {/* Smaller Circle */}
+                <View
+                  style={[
+                    styles.circle,
+                    isActive && styles.circleActive,
+                    isCompleted && styles.circleCompleted,
+                    isInactive && styles.circleInactive,
+                  ]}
+                >
+                  {isCompleted ? (
+                    <Ionicons name="checkmark" size={16} color={COLORS.white} />
+                  ) : (
+                    <Ionicons
+                      name={step.icon}
+                      size={16}
+                      color={isActive ? COLORS.white : COLORS.textSecondary}
+                    />
+                  )}
+                </View>
               </View>
-              <Text style={styles.timeSlotText}>{time}</Text>
+
+              {/* Smaller Label */}
+              <Text
+                style={[
+                  styles.label,
+                  isActive && styles.labelActive,
+                  isCompleted && styles.labelCompleted,
+                ]}
+              >
+                {step.label}
+              </Text>
+
+              {/* Thinner Connector Line */}
+              {index < steps.length - 1 && (
+                <View
+                  style={[
+                    styles.connectorLine,
+                    isCompleted && styles.connectorLineCompleted,
+                  ]}
+                />
+              )}
             </View>
-          ))}
-        </View>
+          );
+        })}
       </View>
     );
+  };
+
+  const getStepTitle = () => {
+    const stepTitles = {
+      1: "Schedule Information",
+      2: "Classes Data",
+      3: "Teachers Data",
+    };
+    return stepTitles[currentStep] || "";
+  };
+
+  const getStepIcon = () => {
+    const stepIcons = {
+      1: "calendar-outline",
+      2: "school-outline",
+      3: "people-outline",
+    };
+    return stepIcons[currentStep] || "create-outline";
+  };
+
+  const getStepSubtitle = () => {
+    const stepSubtitles = {
+      1: "Enter timetable and school schedule",
+      2: "Add classes, subjects, and sections",
+      3: "Add teachers and subject assignments",
+    };
+    return stepSubtitles[currentStep] || "";
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-      >
+
+      <View style={styles.container}>
+        <Header
+          navigation={navigation}
+          title="Create Timetable"
+          icon={getStepIcon()}
+          subtitle={`Step ${currentStep} of 3: ${getStepTitle()}`}
+        />
+
+        {/* THINNER STEP BAR */}
+        <View style={styles.stepCard}>{renderStepIndicator()}</View>
+
         <ScrollView
+          style={styles.content}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={styles.contentContainer}
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Create Timetable</Text>
-            <Text style={styles.headerSubtitle}>
-              Enter your school information to generate a timetable
-            </Text>
-          </View>
-
-          {/* Section 1: Schedule */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.sectionHeaderLeft}>
-                <Ionicons
-                  name="calendar-outline"
-                  size={22}
-                  color={COLORS.primary}
-                />
-                <Text style={styles.sectionTitle}>School & Schedule</Text>
-              </View>
-              {completedSections.schedule && (
-                <View style={styles.completedBadge}>
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={16}
-                    color={COLORS.success}
-                  />
-                  <Text style={styles.completedText}>Completed</Text>
-                </View>
-              )}
-            </View>
-
-            <View style={styles.card}>
-              <View style={styles.inputRow}>
-                <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Working Days per Week</Text>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      errors.workingDays && styles.inputError,
-                    ]}
-                    placeholder="e.g., 5"
-                    keyboardType="numeric"
-                    value={schedule.workingDays}
-                    onChangeText={(text) =>
-                      handleScheduleChange("workingDays", text)
-                    }
-                  />
-                  {errors.workingDays && (
-                    <Text style={styles.errorText}>{errors.workingDays}</Text>
-                  )}
-                </View>
-                <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Slots per Day</Text>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      errors.slotsPerDay && styles.inputError,
-                    ]}
-                    placeholder="e.g., 8"
-                    keyboardType="numeric"
-                    value={schedule.slotsPerDay}
-                    onChangeText={(text) =>
-                      handleScheduleChange("slotsPerDay", text)
-                    }
-                  />
-                  {errors.slotsPerDay && (
-                    <Text style={styles.errorText}>{errors.slotsPerDay}</Text>
-                  )}
-                </View>
-              </View>
-
-              <View style={styles.inputRow}>
-                <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Break After Slot</Text>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      errors.breakAfterSlot && styles.inputError,
-                    ]}
-                    placeholder="e.g., 4"
-                    keyboardType="numeric"
-                    value={schedule.breakAfterSlot}
-                    onChangeText={(text) =>
-                      handleScheduleChange("breakAfterSlot", text)
-                    }
-                  />
-                  {errors.breakAfterSlot && (
-                    <Text style={styles.errorText}>
-                      {errors.breakAfterSlot}
-                    </Text>
-                  )}
-                </View>
-                <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Slot Duration (mins)</Text>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      errors.slotDuration && styles.inputError,
-                    ]}
-                    placeholder="e.g., 45"
-                    keyboardType="numeric"
-                    value={schedule.slotDuration}
-                    onChangeText={(text) =>
-                      handleScheduleChange("slotDuration", text)
-                    }
-                  />
-                  {errors.slotDuration && (
-                    <Text style={styles.errorText}>{errors.slotDuration}</Text>
-                  )}
-                </View>
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>First Slot Starting Time</Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    errors.firstSlotTime && styles.inputError,
-                  ]}
-                  placeholder="e.g., 08:00 AM"
-                  value={schedule.firstSlotTime}
-                  onChangeText={(text) =>
-                    handleScheduleChange("firstSlotTime", text)
-                  }
-                />
-                {errors.firstSlotTime && (
-                  <Text style={styles.errorText}>{errors.firstSlotTime}</Text>
-                )}
-              </View>
-
-              {renderTimeSlotsPreview()}
-            </View>
-          </View>
-
-          {/* Section 2: Classes (Moved before Teachers) */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.sectionHeaderLeft}>
-                <Ionicons
-                  name="school-outline"
-                  size={22}
-                  color={COLORS.primary}
-                />
-                <Text style={styles.sectionTitle}>Classes</Text>
-              </View>
-              {completedSections.classes && (
-                <View style={styles.completedBadge}>
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={16}
-                    color={COLORS.success}
-                  />
-                  <Text style={styles.completedText}>Completed</Text>
-                </View>
-              )}
-            </View>
-
-            {classes.map((cls, index) => (
-              <View key={cls.id} style={styles.card}>
-                <View style={styles.itemHeader}>
-                  <Text style={styles.itemNumber}>Class {index + 1}</Text>
-                  {classes.length > 1 && (
-                    <TouchableOpacity onPress={() => removeClass(cls.id)}>
-                      <Ionicons
-                        name="close-circle"
-                        size={24}
-                        color={COLORS.error}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-                <TextInput
-                  style={[styles.input, errors.classes && styles.inputError]}
-                  placeholder="Enter class name (e.g., Class 6)"
-                  value={cls.name}
-                  onChangeText={(text) => updateClass(cls.id, text)}
-                />
-                <View style={styles.chipContainer}>
-                  {cls.subjects.map((subject, idx) => (
-                    <View key={idx} style={styles.chip}>
-                      <Text style={styles.chipText}>{subject}</Text>
-                      <TouchableOpacity
-                        onPress={() => removeClassSubject(cls.id, idx)}
-                      >
-                        <Ionicons
-                          name="close"
-                          size={16}
-                          color={COLORS.textLight}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </View>
-                <View style={styles.addRow}>
-                  <TextInput
-                    style={[styles.inputSmall, styles.input]}
-                    placeholder="Add subject for this class"
-                    value={newSubject}
-                    onChangeText={setNewSubject}
-                  />
-                  <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={() => addClassSubject(cls.id)}
-                  >
-                    <Ionicons name="add" size={24} color={COLORS.white} />
-                  </TouchableOpacity>
-                </View>
-                {errors.classes && (
-                  <Text style={styles.errorText}>{errors.classes}</Text>
-                )}
-              </View>
-            ))}
-            <TouchableOpacity
-              style={styles.addSectionButton}
-              onPress={addClass}
-            >
-              <Ionicons
-                name="add-circle-outline"
-                size={20}
-                color={COLORS.primary}
-              />
-              <Text style={styles.addSectionButtonText}>Add Class</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Section 3: Teachers (Moved after Classes) */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.sectionHeaderLeft}>
-                <Ionicons
-                  name="people-outline"
-                  size={22}
-                  color={COLORS.primary}
-                />
-                <Text style={styles.sectionTitle}>Teachers</Text>
-              </View>
-              {completedSections.teachers && (
-                <View style={styles.completedBadge}>
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={16}
-                    color={COLORS.success}
-                  />
-                  <Text style={styles.completedText}>Completed</Text>
-                </View>
-              )}
-            </View>
-
-            {teachers.map((teacher, index) => (
-              <View key={teacher.id} style={styles.card}>
-                <View style={styles.itemHeader}>
-                  <Text style={styles.itemNumber}>Teacher {index + 1}</Text>
-                  {teachers.length > 1 && (
-                    <TouchableOpacity onPress={() => removeTeacher(teacher.id)}>
-                      <Ionicons
-                        name="close-circle"
-                        size={24}
-                        color={COLORS.error}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-                <TextInput
-                  style={[styles.input, errors.teachers && styles.inputError]}
-                  placeholder="Enter teacher name"
-                  value={teacher.name}
-                  onChangeText={(text) => updateTeacher(teacher.id, text)}
-                />
-
-                <View style={styles.teacherSubjectsContainer}>
-                  <Text style={styles.subLabel}>Subjects Taught</Text>
-                  {teacher.subjects.map((subject) => (
-                    <View key={subject.id} style={styles.teacherSubjectRow}>
-                      <View style={styles.teacherSubjectInputs}>
-                        <TextInput
-                          style={[styles.input, styles.teacherSubjectInput]}
-                          placeholder="Subject name"
-                          value={subject.name}
-                          onChangeText={(text) =>
-                            updateTeacherSubject(
-                              teacher.id,
-                              subject.id,
-                              "name",
-                              text,
-                            )
-                          }
-                        />
-                        <TextInput
-                          style={[styles.input, styles.teacherSectionInput]}
-                          placeholder="Section (e.g., 6A)"
-                          value={subject.section}
-                          onChangeText={(text) =>
-                            updateTeacherSubject(
-                              teacher.id,
-                              subject.id,
-                              "section",
-                              text,
-                            )
-                          }
-                        />
-                      </View>
-                      {teacher.subjects.length > 1 && (
-                        <TouchableOpacity
-                          style={styles.removeSubjectButton}
-                          onPress={() =>
-                            removeTeacherSubject(teacher.id, subject.id)
-                          }
-                        >
-                          <Ionicons
-                            name="close-circle"
-                            size={20}
-                            color={COLORS.error}
-                          />
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  ))}
-                </View>
-
-                <TouchableOpacity
-                  style={styles.addSubjectButton}
-                  onPress={() => addTeacherSubject(teacher.id)}
-                >
-                  <Ionicons
-                    name="add-circle-outline"
-                    size={18}
-                    color={COLORS.primary}
-                  />
-                  <Text style={styles.addSubjectButtonText}>Add Subject</Text>
-                </TouchableOpacity>
-                {errors.teachers && (
-                  <Text style={styles.errorText}>{errors.teachers}</Text>
-                )}
-              </View>
-            ))}
-            <TouchableOpacity
-              style={styles.addSectionButton}
-              onPress={addTeacher}
-            >
-              <Ionicons
-                name="add-circle-outline"
-                size={20}
-                color={COLORS.primary}
-              />
-              <Text style={styles.addSectionButtonText}>Add Teacher</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Section 4: Subjects (Class-wise) */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.sectionHeaderLeft}>
-                <Ionicons
-                  name="book-outline"
-                  size={22}
-                  color={COLORS.primary}
-                />
-                <Text style={styles.sectionTitle}>Subjects by Class</Text>
-              </View>
-              {completedSections.subjects && (
-                <View style={styles.completedBadge}>
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={16}
-                    color={COLORS.success}
-                  />
-                  <Text style={styles.completedText}>Completed</Text>
-                </View>
-              )}
-            </View>
-
-            {classSubjects.map((item, index) => (
-              <View key={item.id} style={styles.card}>
-                <View style={styles.itemHeader}>
-                  <Text style={styles.itemNumber}>Class {index + 1}</Text>
-                  {classSubjects.length > 1 && (
-                    <TouchableOpacity
-                      onPress={() => removeClassSubjectEntry(item.id)}
-                    >
-                      <Ionicons
-                        name="close-circle"
-                        size={24}
-                        color={COLORS.error}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-                <TextInput
-                  style={[
-                    styles.input,
-                    errors.classSubjects && styles.inputError,
-                  ]}
-                  placeholder="Enter class name (e.g., Class 6)"
-                  value={item.className}
-                  onChangeText={(text) =>
-                    updateClassSubjectEntry(item.id, text)
-                  }
-                />
-
-                <View style={styles.chipContainer}>
-                  {item.subjects.map((subject, idx) => (
-                    <View key={idx} style={[styles.chip, styles.subjectChip]}>
-                      <Text style={styles.chipText}>{subject}</Text>
-                      <TouchableOpacity
-                        onPress={() => removeSubjectFromClass(item.id, idx)}
-                      >
-                        <Ionicons name="close" size={16} color={COLORS.white} />
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </View>
-
-                <View style={styles.addRow}>
-                  <TextInput
-                    style={[styles.inputSmall, styles.input]}
-                    placeholder="Add subject for this class"
-                    value={classSubjectName}
-                    onChangeText={setClassSubjectName}
-                  />
-                  <TouchableOpacity
-                    style={[styles.addButton, styles.subjectAddButton]}
-                    onPress={() => addSubjectToClass(item.id)}
-                  >
-                    <Ionicons name="add" size={24} color={COLORS.white} />
-                  </TouchableOpacity>
-                </View>
-                {errors.classSubjects && (
-                  <Text style={styles.errorText}>{errors.classSubjects}</Text>
-                )}
-              </View>
-            ))}
-            <TouchableOpacity
-              style={styles.addSectionButton}
-              onPress={addClassSubjectEntry}
-            >
-              <Ionicons
-                name="add-circle-outline"
-                size={20}
-                color={COLORS.primary}
-              />
-              <Text style={styles.addSectionButtonText}>Add Class</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Generate Button */}
-          <TouchableOpacity
-            style={styles.generateButton}
-            onPress={validateAndGenerate}
-          >
-            <Ionicons name="rocket-outline" size={24} color={COLORS.white} />
-            <Text style={styles.generateButtonText}>Generate Timetable</Text>
-          </TouchableOpacity>
-
-          <View style={styles.bottomSpacing} />
+          {currentStep === 1 && (
+            <Interface1 data={timetableData} onNext={handleNext} />
+          )}
+          {currentStep === 2 && (
+            <Interface2
+              data={timetableData}
+              onNext={handleNext}
+              onBack={handleBack}
+            />
+          )}
+          {currentStep === 3 && (
+            <Interface3
+              data={timetableData}
+              onNext={handleGenerate}
+              onBack={handleBack}
+            />
+          )}
         </ScrollView>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -854,275 +191,113 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
-  keyboardView: {
+  container: {
     flex: 1,
+    backgroundColor: COLORS.backgroundGray,
   },
-  scrollContent: {
-    paddingHorizontal: SPACING.lg,
-    paddingBottom: SPACING.xxl,
-  },
-  header: {
-    paddingTop: SPACING.md,
-    paddingBottom: SPACING.md,
-  },
-  headerTitle: {
-    fontSize: TYPOGRAPHY.sizes.xxxl,
-    fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.textPrimary,
-    letterSpacing: -0.5,
-  },
-  headerSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.textSecondary,
-    marginTop: 2,
-  },
-  section: {
-    marginTop: SPACING.lg,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: SPACING.sm,
-  },
-  sectionHeaderLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  sectionTitle: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.textPrimary,
-    marginLeft: SPACING.xs,
-  },
-  completedBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: COLORS.success + "15",
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 2,
-    borderRadius: BORDER_RADIUS.md,
-  },
-  completedText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.success,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    marginLeft: 2,
-  },
-  card: {
+
+  // THINNER STEP CARD
+  stepCard: {
     backgroundColor: COLORS.white,
-    borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.md,
-    marginBottom: SPACING.sm,
-    ...SHADOWS.small,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  inputRow: {
-    flexDirection: "row",
-    gap: SPACING.sm,
-  },
-  inputGroup: {
-    flex: 1,
-  },
-  label: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    color: COLORS.textPrimary,
-    marginBottom: 4,
-  },
-  subLabel: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    color: COLORS.textSecondary,
-    marginTop: SPACING.sm,
-    marginBottom: 4,
-  },
-  input: {
-    height: 46,
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    borderRadius: BORDER_RADIUS.md,
+    paddingVertical: SPACING.xs, // Reduced from lg to xs
     paddingHorizontal: SPACING.sm,
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.textPrimary,
-    backgroundColor: COLORS.backgroundLight,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+    ...SHADOWS.small,
   },
-  inputSmall: {
-    flex: 1,
-    height: 40,
-  },
-  inputError: {
-    borderColor: COLORS.error,
-    backgroundColor: "#FFF5F5",
-  },
-  errorText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.error,
-    marginTop: 4,
-  },
-  itemHeader: {
+
+  // MAIN ROW
+  stepsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: SPACING.xs,
+    paddingHorizontal: SPACING.xs,
   },
-  itemNumber: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.textSecondary,
-  },
-  addRow: {
-    flexDirection: "row",
+
+  // EACH STEP COLUMN
+  stepColumn: {
+    flex: 1,
     alignItems: "center",
-    gap: SPACING.xs,
-    marginTop: SPACING.xs,
+    justifyContent: "center",
+    position: "relative",
   },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: BORDER_RADIUS.md,
-    backgroundColor: COLORS.primary,
+
+  // CIRCLE CONTAINER
+  circleContainer: {
+    width: 36,
+    height: 36,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: SPACING.xxs,
   },
-  subjectAddButton: {
-    backgroundColor: COLORS.primary,
-  },
-  chipContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-    marginTop: 4,
-  },
-  chip: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: COLORS.primaryFade,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 4,
-    borderRadius: BORDER_RADIUS.md,
-    gap: 4,
-  },
-  subjectChip: {
-    backgroundColor: COLORS.primary,
-  },
-  chipText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.textPrimary,
-  },
-  addSectionButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: SPACING.sm,
-  },
-  addSectionButtonText: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    color: COLORS.primary,
-    marginLeft: SPACING.xs,
-  },
-  // Teacher specific styles
-  teacherSubjectsContainer: {
-    marginTop: SPACING.xs,
-  },
-  teacherSubjectRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: SPACING.xs,
-    gap: SPACING.xs,
-  },
-  teacherSubjectInputs: {
-    flex: 1,
-    flexDirection: "row",
-    gap: SPACING.xs,
-  },
-  teacherSubjectInput: {
-    flex: 2,
-    height: 40,
-  },
-  teacherSectionInput: {
-    flex: 1,
-    height: 40,
-  },
-  removeSubjectButton: {
-    padding: 4,
-  },
-  addSubjectButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 4,
-    paddingVertical: 4,
-  },
-  addSubjectButtonText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.primary,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    marginLeft: 4,
-  },
-  timePreviewContainer: {
-    marginTop: SPACING.md,
-    paddingTop: SPACING.md,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-  },
-  timePreviewTitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.textSecondary,
-    marginBottom: SPACING.xs,
-  },
-  timePreviewGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  timeSlotItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: COLORS.backgroundLight,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 4,
-    borderRadius: BORDER_RADIUS.md,
-    gap: 4,
-  },
-  timeSlotNumber: {
-    width: 20,
-    height: 20,
-    borderRadius: BORDER_RADIUS.circle,
-    backgroundColor: COLORS.primary,
+
+  // SMALLER CIRCLE
+  circle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 2,
   },
-  timeSlotNumberText: {
-    fontSize: 10,
+
+  circleActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+    ...SHADOWS.small,
+  },
+
+  circleCompleted: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+
+  circleInactive: {
+    backgroundColor: COLORS.white,
+    borderColor: COLORS.border,
+  },
+
+  // SMALLER LABEL
+  label: {
+    fontSize: TYPOGRAPHY.sizes.xs, // Reduced from sm to xs
+    color: COLORS.textSecondary,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    textAlign: "center",
+  },
+
+  labelActive: {
+    color: COLORS.primary,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.white,
   },
-  timeSlotText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.textSecondary,
-  },
-  generateButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: COLORS.primary,
-    borderRadius: BORDER_RADIUS.lg,
-    paddingVertical: SPACING.md,
-    marginTop: SPACING.xl,
-    ...SHADOWS.large,
-    gap: SPACING.sm,
-  },
-  generateButtonText: {
-    fontSize: TYPOGRAPHY.sizes.lg,
+
+  labelCompleted: {
+    color: COLORS.primary,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.white,
-    letterSpacing: 0.3,
   },
-  bottomSpacing: {
-    height: SPACING.xxl,
+
+  // THINNER CONNECTOR LINE
+  connectorLine: {
+    position: "absolute",
+    top: 16, // Aligns with center of smaller circle (32/2 = 16)
+    left: "50%",
+    width: "100%",
+    height: 2, // Thinner line
+    backgroundColor: COLORS.border,
+    zIndex: -1,
+  },
+
+  connectorLineCompleted: {
+    backgroundColor: COLORS.primary,
+  },
+
+  // CONTENT
+  content: {
+    flex: 1,
+  },
+
+  contentContainer: {
+    paddingBottom: SPACING.xxl,
   },
 });
 
-export default CreateTimetableScreen;
+export default CreateTimetable;

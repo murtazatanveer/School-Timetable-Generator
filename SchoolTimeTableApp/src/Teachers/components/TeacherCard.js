@@ -13,8 +13,7 @@ import {
   SHADOWS,
   TYPOGRAPHY,
 } from "../../Theme/colors";
-import SubjectCard from "./SubjectCard";
-import ClassTeacherCard from "./ClassTeacherCard";
+import SubjectCard from "../../common/SubjectCard";
 import { getInitials } from "../utils/helpers";
 
 const TeacherCard = ({ teacher }) => {
@@ -71,10 +70,11 @@ const TeacherCard = ({ teacher }) => {
           {/* Class Teacher Card - Displayed first if exists */}
           {hasClassTeacher && (
             <View style={styles.subjectCardWrapper}>
-              <ClassTeacherCard
+              <SubjectCard
+                name={classTeacherSubject}
                 className={teacher.classTeacher.className}
                 section={teacher.classTeacher.section}
-                subject={classTeacherSubject}
+                isClassTeacher={true}
               />
             </View>
           )}
@@ -82,7 +82,12 @@ const TeacherCard = ({ teacher }) => {
           {/* Subject Cards */}
           {teacher.subjects.map((subject, index) => (
             <View key={index} style={styles.subjectCardWrapper}>
-              <SubjectCard subject={subject} index={index} />
+              <SubjectCard
+                name={subject.name}
+                className={subject.className}
+                section={subject.section}
+                isClassTeacher={false}
+              />
             </View>
           ))}
         </ScrollView>

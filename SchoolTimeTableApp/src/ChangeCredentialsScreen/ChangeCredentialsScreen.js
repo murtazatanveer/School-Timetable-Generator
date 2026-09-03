@@ -7,9 +7,9 @@ import {
 } from "react-native";
 import { COLORS, SPACING } from "../Theme/colors";
 import { useCredentialsForm } from "./Hooks/useCredentialsForm";
-import CredentialsHeader from "./components/CredentialsHeader";
 import CredentialsSection from "./components/CredentialsSection";
-import AppButton from "../AppButton/AppButton";
+import AppButton from "../common/AppButton/AppButton";
+import Header from "../common/AppHeader/Header";
 
 const ChangeCredentialsScreen = ({ navigation }) => {
   const {
@@ -36,7 +36,7 @@ const ChangeCredentialsScreen = ({ navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
 
       <View style={styles.container}>
-        <CredentialsHeader
+        <Header
           navigation={navigation}
           title="Change Credentials"
           icon="key-outline"
