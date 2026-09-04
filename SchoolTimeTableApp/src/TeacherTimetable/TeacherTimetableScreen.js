@@ -12,7 +12,7 @@ import { useTeacherTimetable } from "./Hooks/useTeacherTimetable";
 import { teacherData } from "./utils/teacherTimetableData";
 import TimetableHeader from "./components/TimetableHeader";
 import TimetableGrid from "./components/TimetableGrid";
-import TeacherCard from "../Teachers/components/TeacherCard";
+import TeacherCard from "../common/TeacherCard";
 
 const TeacherTimetableScreen = ({ navigation, route }) => {
   const { days, slots, teacher } = useTeacherTimetable(teacherData);

@@ -8,16 +8,15 @@ import {
   TYPOGRAPHY,
 } from "../../Theme/colors";
 
+import { getInitials } from "../../common/utils/helper";
+
 const TeacherCard = ({ lecture, index, isBottomSheet = false }) => {
   return (
     <View style={[styles.teacherCard, isBottomSheet && styles.teacherCardFull]}>
       <View style={styles.teacherCardHeader}>
         <View style={styles.teacherAvatarContainer}>
           <Text style={styles.teacherAvatarText}>
-            {lecture.teacher
-              .split(" ")
-              .map((n) => n[0])
-              .join("")}
+            {getInitials(lecture.teacher)}
           </Text>
         </View>
         <View style={styles.teacherInfoContainer}>

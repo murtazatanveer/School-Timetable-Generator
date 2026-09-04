@@ -1,3 +1,4 @@
+// screens/LoginScreen.js
 import {
   View,
   Text,
@@ -13,7 +14,7 @@ import { COLORS, SPACING, TYPOGRAPHY } from "../../Theme/colors";
 import DecorativeCurves from "./components/DecorativeCurves";
 import AdminToggle from "./components/AdminToggle";
 import FormInput from "./components/FormInput";
-import PrimaryButton from "./components/PrimaryButton";
+import AppButton from "../../common/AppButton/AppButton";
 import { useLoginForm } from "./hooks/useLoginForm";
 
 const { width, height } = Dimensions.get("window");
@@ -88,17 +89,22 @@ const LoginScreen = ({ navigation }) => {
               onSubmitEditing={() => handleLogin(navigation)}
             />
 
-            <PrimaryButton
+            {/* REPLACED PrimaryButton with AppButton */}
+            <AppButton
               title="Log In"
               onPress={() => handleLogin(navigation)}
-              isLoading={isLoading}
+              loading={isLoading}
+              variant="primary"
+              size="large"
+              fullWidth={true}
+              icon="lock-closed"
             />
 
             {/* Signup Link */}
             <View style={styles.signupContainer}>
               <Text style={styles.signupText}>Don't Have An Account? </Text>
               <TouchableOpacity
-                onPress={() => navigation?.navigate("Signup")}
+                onPress={() => navigation?.navigate("SignupScreen")}
                 activeOpacity={0.7}
               >
                 <Text style={styles.signupLink}>Sign Up</Text>

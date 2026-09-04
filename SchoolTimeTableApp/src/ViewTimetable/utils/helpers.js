@@ -1,11 +1,3 @@
-export const getInitials = (name) => {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-};
-
 export const formatTime = (date) => {
   let hours = date.getHours();
   const minutes = date.getMinutes().toString().padStart(2, "0");

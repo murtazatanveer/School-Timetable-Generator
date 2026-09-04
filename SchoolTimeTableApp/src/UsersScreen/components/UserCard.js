@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -9,16 +8,10 @@ import {
   TYPOGRAPHY,
 } from "../../Theme/colors";
 
+import { getInitials } from "../../common/utils/helper";
+
 const UserCard = ({ user, isPasswordVisible, onTogglePassword, onEdit }) => {
   const isAdmin = user.role === "Admin";
-
-  const getInitials = (name) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
 
   const handleDelete = () => {
     Alert.alert(

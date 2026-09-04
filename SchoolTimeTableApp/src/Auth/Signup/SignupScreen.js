@@ -13,7 +13,7 @@ import { COLORS, SPACING, TYPOGRAPHY } from "../../Theme/colors";
 import HeaderWithLogo from "./components/HeaderWithLogo";
 import WelcomeHeader from "./components/WelcomeHeader";
 import LabeledInput from "./components/LabeledInput";
-import PrimaryButton from "./components/PrimaryButton";
+import AppButton from "../../common/AppButton/AppButton";
 import { useSignupForm } from "./hooks/useSignupForm";
 
 const SignupScreen = ({ navigation }) => {
@@ -175,18 +175,22 @@ const SignupScreen = ({ navigation }) => {
               onSubmitEditing={() => handleSignup(navigation)}
             />
 
-            {/* Signup Button */}
-            <PrimaryButton
+            {/* Signup Button - REPLACED with AppButton */}
+            <AppButton
               title="Create Account"
               onPress={() => handleSignup(navigation)}
-              isLoading={isLoading}
+              loading={isLoading}
+              variant="primary"
+              size="large"
+              fullWidth={true}
+              icon="person-add-outline"
             />
 
             {/* Login Link */}
             <View style={styles.loginContainer}>
               <Text style={styles.loginText}>Already have an account? </Text>
               <TouchableOpacity
-                onPress={() => navigation?.navigate("Login")}
+                onPress={() => navigation?.navigate("LoginScreen")}
                 activeOpacity={0.7}
               >
                 <Text style={styles.loginLink}>Log In</Text>

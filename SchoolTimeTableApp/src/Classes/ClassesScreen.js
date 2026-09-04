@@ -1,14 +1,14 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   StatusBar,
   FlatList,
-  Animated,
 } from "react-native";
 import { COLORS, SPACING } from "../Theme/colors";
 import { useClassData } from "./Hooks/useClassData";
+import useBottomNavScroll from "../common/hooks/useBottomNavScroll";
 import { classesData } from "./utils/classesData";
 import ClassesHeader from "./components/ClassesHeader";
 import ClassCard from "./components/ClassCard";
@@ -19,29 +19,7 @@ const ClassesScreen = ({ navigation }) => {
   const { totalClasses, totalSections, totalSubjects } =
     useClassData(classesData);
 
-  // Animation for bottom navigation
-  const translateY = useRef(new Animated.Value(0)).current;
-  const lastOffsetY = useRef(0);
-  const isAnimating = useRef(false);
-
-  const handleScroll = (event) => {
-    const currentOffset = event.nativeEvent.contentOffset.y;
-    const direction = currentOffset > lastOffsetY.current ? "down" : "up";
-
-    if (!isAnimating.current) {
-      isAnimating.current = true;
-
-      Animated.timing(translateY, {
-        toValue: direction === "down" ? 120 : 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        isAnimating.current = false;
-      });
-    }
-
-    lastOffsetY.current = currentOffset;
-  };
+  const { translateY, handleScroll } = useBottomNavScroll();
 
   const toggleClass = (classId) => {
     if (expandedClass === classId) {

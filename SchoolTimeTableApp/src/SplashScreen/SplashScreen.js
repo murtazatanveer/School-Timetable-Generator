@@ -29,9 +29,8 @@ const SplashScreen = ({ navigation }) => {
       }),
     ]).start();
 
-    // Navigate to Welcome after 3 seconds
     const timer = setTimeout(() => {
-      navigation?.replace("Welcome"); // Changed from "Login" to "Welcome"
+      navigation?.replace("WelcomeScreen");
     }, 3000);
 
     return () => clearTimeout(timer);

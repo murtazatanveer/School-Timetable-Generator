@@ -1,5 +1,6 @@
 // hooks/useLoginForm.js
 import { useState, useRef } from "react";
+import { validateLoginForm } from "../utils/validation";
 
 export const useLoginForm = () => {
   const [formData, setFormData] = useState({ userName: "", password: "" });
@@ -35,11 +36,7 @@ export const useLoginForm = () => {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
-        if (isAdmin) {
-          navigation?.navigate("AdminDashboard");
-        } else {
-          navigation?.navigate("Dashboard");
-        }
+        navigation.navigate("Dashboard");
       }, 1500);
     }
   };

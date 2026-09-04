@@ -11,7 +11,7 @@ export const CLASSES = [
   "Class 10",
 ];
 
-export const SECTIONS = ["A", "B", "C", "D"];
+export const SECTIONS = ["A", "B", "C", "D", "E", "F", "G"];
 
 export const mockGetTeacher = (selectedClass, selectedSection) => {
   return {

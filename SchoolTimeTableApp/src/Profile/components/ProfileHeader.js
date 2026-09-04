@@ -7,7 +7,7 @@ import {
   TYPOGRAPHY,
 } from "../../Theme/colors";
 import { userData } from "../utils/profileData";
-import { getInitials } from "../utils/helpers";
+import { getInitials } from "../../common/utils/helper";
 
 const ProfileHeader = () => {
   return (

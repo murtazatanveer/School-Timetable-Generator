@@ -7,14 +7,9 @@ import {
   SHADOWS,
   TYPOGRAPHY,
 } from "../../Theme/colors";
+import { getInitials } from "../../common/utils/helper";
 
 const TeacherResultCard = ({ result }) => {
-  const getInitials = (name) =>
-    name
-      .split(" ")
-      .map((n) => n[0])
-      .join("");
-
   return (
     <View style={styles.resultWrapper}>
       <View style={styles.resultCard}>

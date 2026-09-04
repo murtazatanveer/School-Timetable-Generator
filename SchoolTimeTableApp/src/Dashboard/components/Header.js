@@ -13,7 +13,7 @@ import {
   SHADOWS,
   TYPOGRAPHY,
 } from "../../Theme/colors";
-import { getInitials } from "../utils/helpers";
+import { getInitials } from "../../common/utils/helper";
 
 const Header = ({ teacherName, greeting, slideAnim }) => {
   return (

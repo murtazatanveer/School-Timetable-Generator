@@ -8,7 +8,6 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  Dimensions,
   Animated,
   Easing,
 } from "react-native";
@@ -21,7 +20,6 @@ import {
 } from "../Theme/colors";
 
 const WelcomeScreen = ({ navigation }) => {
-  // Animation values
   const bottomBarSlide = useRef(new Animated.Value(0)).current;
   const contentFade = useRef(new Animated.Value(0)).current;
 
@@ -47,11 +45,11 @@ const WelcomeScreen = ({ navigation }) => {
   const splashIcon = require("../../assets/splash-icon.png");
 
   const handleSignUp = () => {
-    navigation?.navigate("Signup");
+    navigation?.navigate("SignupScreen");
   };
 
   const handleLogin = () => {
-    navigation?.navigate("Login");
+    navigation?.navigate("LoginScreen");
   };
 
   // Interpolate bottom bar slide animation

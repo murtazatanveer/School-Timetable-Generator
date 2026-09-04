@@ -12,9 +12,10 @@ import {
   BORDER_RADIUS,
   SHADOWS,
   TYPOGRAPHY,
-} from "../../Theme/colors";
-import SubjectCard from "../../common/SubjectCard";
-import { getInitials } from "../utils/helpers";
+} from "../Theme/colors";
+import { getInitials } from "./utils/helper";
+
+import SubjectCard from "./SubjectCard";
 
 const TeacherCard = ({ teacher }) => {
   const hasClassTeacher = teacher.classTeacher !== null;

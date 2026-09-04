@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -23,6 +23,7 @@ import CurrentPeriodPopup from "./components/CurrentPeriodPopup";
 
 // Hooks
 import { useDashboardAnimations } from "./Hooks/useDashboardAnimations";
+import useBottomNavScroll from "./../common/hooks/useBottomNavScroll";
 
 // Utils
 import {
@@ -38,31 +39,7 @@ const DashboardScreen = ({ navigation }) => {
   const [showTeachers, setShowTeachers] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
-  // Animation for bottom navigation
-  const translateY = useRef(new Animated.Value(0)).current;
-  const lastOffsetY = useRef(0);
-  const isAnimating = useRef(false);
-
-  // Handle scroll to hide/show bottom nav
-  const handleScroll = (event) => {
-    const currentOffset = event.nativeEvent.contentOffset.y;
-    const direction = currentOffset > lastOffsetY.current ? "down" : "up";
-
-    // Only animate if not already animating and direction changed
-    if (!isAnimating.current) {
-      isAnimating.current = true;
-
-      Animated.timing(translateY, {
-        toValue: direction === "down" ? 120 : 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        isAnimating.current = false;
-      });
-    }
-
-    lastOffsetY.current = currentOffset;
-  };
+  const { translateY, handleScroll } = useBottomNavScroll();
 
   // Get current period
   const currentPeriod = todaySchedule.find((item) => item.isCurrent);

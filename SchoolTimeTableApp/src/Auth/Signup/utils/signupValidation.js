@@ -5,6 +5,11 @@ export const validateSignupForm = (formData) => {
   // Username validation
   if (!formData.userName.trim()) {
     newErrors.userName = "Username is required";
+  } else if (formData.userName.trim().length < 8) {
+    newErrors.userName = "Username must be at least 8 characters long";
+  } else if (!/^[a-zA-Z]+$/.test(formData.userName.trim())) {
+    newErrors.userName =
+      "Username must contain only letters (no numbers or special characters)";
   }
 
   // School Name validation
@@ -29,8 +34,8 @@ export const validateSignupForm = (formData) => {
   // Password validation
   if (!formData.password) {
     newErrors.password = "Password is required";
-  } else if (formData.password.length < 6) {
-    newErrors.password = "Password must be at least 6 characters";
+  } else if (formData.password.length < 8) {
+    newErrors.password = "Password must be at least 8 characters";
   }
 
   // Confirm Password validation

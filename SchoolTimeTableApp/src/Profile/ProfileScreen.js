@@ -1,15 +1,13 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   StatusBar,
   ScrollView,
-  Animated,
   Alert,
 } from "react-native";
 import { COLORS, SPACING } from "../Theme/colors";
-import { useProfileScroll } from "./Hooks/useProfileScroll";
 import { menuSections } from "./utils/profileData";
 import ProfileHeader from "./components/ProfileHeader";
 import MenuSection from "./components/MenuSection";
@@ -17,10 +15,11 @@ import ThemePopup from "./components/ThemePopup";
 import BottomNavigation from "../common/Navigation/BottomNavigation";
 import AppButton from "../common/AppButton/AppButton";
 import UserPopup from "../UsersScreen/components/UserPopup";
+import useBottomNavScroll from "../common/hooks/useBottomNavScroll";
 
 const ProfileScreen = ({ navigation }) => {
-  const translateY = useRef(new Animated.Value(0)).current;
-  const { handleScroll } = useProfileScroll(translateY);
+  const { translateY, handleScroll } = useBottomNavScroll();
+
   const [showThemePopup, setShowThemePopup] = useState(false);
   const [showAddUserPopup, setShowAddUserPopup] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("light");

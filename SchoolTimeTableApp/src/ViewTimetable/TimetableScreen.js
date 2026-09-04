@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { COLORS, SPACING } from "../Theme/colors";
 import { useTimetableAnimations } from "./Hooks/useTimetableAnimations";
+import useBottomNavScroll from "../common/hooks/useBottomNavScroll";
 import { timetableData, days } from "./utils/timetableData";
 import HeaderCard from "./components/HeaderCard";
 import DaySelector from "./components/DaySelector";
@@ -22,31 +23,7 @@ const TimetableScreen = ({ navigation }) => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
 
-  // Animation for bottom navigation
-  const translateY = useRef(new Animated.Value(0)).current;
-  const lastOffsetY = useRef(0);
-  const isAnimating = useRef(false);
-
-  // Handle scroll to hide/show bottom nav
-  const handleScroll = (event) => {
-    const currentOffset = event.nativeEvent.contentOffset.y;
-    const direction = currentOffset > lastOffsetY.current ? "down" : "up";
-
-    // Only animate if not already animating
-    if (!isAnimating.current) {
-      isAnimating.current = true;
-
-      Animated.timing(translateY, {
-        toValue: direction === "down" ? 120 : 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        isAnimating.current = false;
-      });
-    }
-
-    lastOffsetY.current = currentOffset;
-  };
+  const { translateY, handleScroll } = useBottomNavScroll();
 
   const { fadeAnim, slideAnim, timeAnim, liveBlinkAnim } =
     useTimetableAnimations(currentTime, setCurrentTime);
